@@ -1,0 +1,308 @@
+<!DOCTYPE HTML>
+<!-- 
+Tommy Liang 
+-->
+<html>
+	<head>
+		<title></title>
+		<link rel = "stylesheet" href = "CssTextFile.css" />
+		<style>
+			button#one, #two, #three
+			{
+				background-color: black;
+				color: white;
+				font:20pt comic sans ms;
+			}
+			button#clear, #restart1
+			{
+				font:11pt comic sans ms;
+			}
+			div#title
+			{
+				font:20pt fantasy;
+			}
+			div#cmsg
+			{
+				color: red;
+			}
+			span#score
+			{
+				border: 2px dashed black;
+				border-radius: 15px;
+				padding: 2px;
+			}
+			span#timer
+			{
+				text-decoration: underline dashed;
+				color: grey;
+			}
+			input#code
+			{
+				font-size: 12pt;
+			}
+			div#log
+			{
+				font:16pt comic sans ms;
+			}
+		</style>
+		<script src = "Utilities.js"></script>
+		<script>
+			function initialize()
+			{
+				userOutput = document.getElementById("guess");
+				timerOutput = document.getElementById("tmr");
+				userlogOutput = document.getElementById("log");
+				compmessageOutput = document.getElementById("cmsg");
+				scoreOutput = document.getElementById("sre");
+				
+				commentary = "Guess the code before the Cops arrive! You have a total of 7 attempts; If lucky, you may gain more tries. If not, you may lose one try.";
+				log = "";
+				turn = 0;
+				value = "";
+				number1 = "";
+				number2 = "";
+				number3 = "";
+				userguess = "";
+				inputnumber = "";
+				timer = 7;
+				score = 0;
+				w = 0;
+				com1 = getRandomInteger(1,3);
+				com2 = getRandomInteger(1,3);
+				com3 = getRandomInteger(1,3);				
+				
+				display();
+			}
+			function ButtonPress(temp)
+			{
+				inputnumber = temp;
+				if (w == 0)
+				{
+					UpdateCode();
+				}
+			} 
+			function UpdateCode()
+			{
+				userguess = "";
+				if(number1 != "")
+				{
+					if(number2 != "")
+					{
+						if(number3 == "")
+						{
+							number3 = inputnumber;
+							userguess = number1 + "" + number2 + "" + number3;
+							SubmitCode();
+							number1 = "";
+							number2 = "";
+							number3 = "";
+						}
+					}
+					else
+					{
+						number2 = inputnumber;
+						userguess = number1 + "" + number2 + "" + number3;
+					}
+				}
+				else 
+				{
+					number1 = inputnumber;
+					userguess = number1 + "" + number2 + "" + number3;
+				}
+				display();
+			}
+			function SubmitCode()
+			{
+				timer = timer - 1;
+				commentary = "";
+				events();
+				if(turn == 1 || turn == 2)
+				{
+					commentary = "IN THE AREA! The cops will show up one turn earlier <br />";
+					timer = timer - 1;
+				}
+				if(turn == 3 || turn == 4)
+				{ 
+					commentary = "TRAFIC JAM! The cops will show up one turn later <br />";
+					timer = timer + 1;
+				}
+				if(turn == 5 || turn == 6)
+				{
+					commentary = "ACCIDENT! The cops will show up two turns later <br />";
+					timer = timer + 2;
+				}
+				if(turn == 7)
+				{
+					commentary = "UNLUCKY! The code has been reset! <br />";
+					com1 = getRandomInteger(1,3);
+					com2 = getRandomInteger(1,3);
+					com3 = getRandomInteger(1,3);		
+				}
+				
+				if(com1 == number1 && com2 == number2 && com3 == number3)  
+				{
+					if(turn == 7)
+					{
+						commentary = "What a miracle, you have guessed the new code! Congratulations, you live another day..." + "<br /> Click the restart button <br />";
+					}
+					else
+					{
+						commentary = "You have guessed the code! Congratulations, you live another day..." + "<br /> Click the restart button <br />";	
+					}
+					value = "correct";
+					score = score + timer;
+					w = 1;
+				}
+				else
+				{
+					if(com1 > number1)
+					{
+						value = "lower";
+						value1 = "higher";
+					}
+					else
+					{
+						if(com1 < number1)
+						{						
+							value = "higher";
+							value1 = "lower";
+						}
+						else
+						{
+							if(com2 > number2)
+							{
+								value = "lower";
+								value1 = "higher";
+							}
+							else
+							{
+								if(com2 < number2)
+								{
+									value = "higher";
+									value1 = "lower";
+								}
+								else
+								{
+									if(com3 > number3)
+									{	
+										value = "lower";
+										value1 = "higher";
+									}
+									else
+									{
+										value = "higher";
+										value1 = "lower";
+									}
+								}
+							}
+						}
+					}
+					commentary = commentary + "You have failed to guess the code! " + timer + " tries left!<br /> Your guess is " + value + " than the actual code."
+				}
+				if(timer <= 0)
+				{
+					timer = 0
+					if(com1 == number1 && com2 == number2 && com3 == number3)  
+					{
+						if(turn == 7)
+						{
+							commentary = "What a miracle, you have guessed the new code! Congratulations, you live another day..." + "<br /> Click the restart button <br />";
+						}
+						else
+						{
+							commentary = "You have guessed the code! Congratulations, you live another day..." + "<br /> Click the restart button <br />";	
+						}
+						value = "correct";
+						score = score + timer;
+					}
+					else
+					{
+						w = 1;
+						copsarrived();
+					}
+				}
+				log = log + userguess + ", " + value1 + "<br />";
+				display();
+			}
+			function copsarrived()
+			{
+				score = 0;
+				w = 2;
+				commentary = "You have failed to guess the code within the given amount of attempts. You have been captured and on your way to prison. <br /> The correct code was " + com1 + com2 + com3 + "! <br /> Click the restart button" ;
+			}
+			function events()
+			{
+				turn = getRandomInteger(1,10000)
+				return(turn);
+			}
+			function clearentry()
+			{
+				number1 = "";
+				number2 = "";
+				number3 = "";
+				userguess = number1 + "" + number2 + "" + number3;
+				display();
+			}
+			function restart()
+			{
+				timer = 7;
+				w = 0;
+				log = "";
+				commentary = "Guess the code before the Cops arrive! You have a total of 7 attempts; If lucky, you may gain more tries. If not, you may lose one try.";
+				com1 = getRandomInteger(1,3);
+				com2 = getRandomInteger(1,3);
+				com3 = getRandomInteger(1,3);		
+				clearentry();
+			}
+			function display()
+			{
+				userOutput.innerHTML = userguess;
+				timerOutput.innerHTML = timer;
+				compmessageOutput.innerHTML = commentary;
+				userlogOutput.innerHTML = log;
+				scoreOutput.innerHTML = score;
+			}
+		</script>
+	</head>
+	<body onload = "initialize();">
+		
+		<div id = "title">
+		The Codebreaker
+		</div>
+		
+		<hr/>
+		
+		<div id = "cmsg"></div>
+		
+		<hr />
+		
+		<span id = "score">
+		Score Count: <span id = "sre"></span>
+		</span>
+		
+		<div id = "vault">
+		<span id = "timer">
+		Timer Count: <span id = "tmr"></span>
+		</span>
+		<p></p>
+		<span id = "guess"></span>
+		<button onclick = "clearentry();" id = "clear">Clear</button>
+		<p></p>
+		<button onclick = "ButtonPress(1);" id = "one">1</button>
+		<button onclick = "ButtonPress(2);" id = "two">2</button>
+		<button onclick = "ButtonPress(3);" id = "three">3</button>
+		<p></p>
+		</div>
+		
+		<div id = "restart">
+		<button onclick = "restart();" id = "restart1">Restart</button>
+		</div>
+		
+		<hr />
+		
+		<div>
+		Guess Log:
+		<div id = "log"></div>
+		</div>
+	</body>
+</html>
