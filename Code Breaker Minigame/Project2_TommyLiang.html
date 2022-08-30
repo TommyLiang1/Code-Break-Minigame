@@ -13,9 +13,17 @@ Tommy Liang
 				color: white;
 				font:20pt comic sans ms;
 			}
-			button#clear, #restart1
+			button#clear
 			{
-				font:11pt comic sans ms;
+				font:16pt comic sans ms;
+			}
+			button#restart1
+			{
+				font:12pt comic sans ms;
+			}
+			button:hover 
+			{
+				background-color: #777777;
 			}
 			div#title
 			{
@@ -23,13 +31,18 @@ Tommy Liang
 			}
 			div#cmsg
 			{
-				color: red;
+				color: rgb(235, 83, 83);
+				width: 500px;
+				margin: auto;
 			}
-			span#score
+			div#score
 			{
-				border: 2px dashed black;
-				border-radius: 15px;
-				padding: 2px;
+				padding: 5px;
+				border: 1px solid;
+				border-radius: 5px;
+				width: 200px;
+				margin: auto;
+				margin-bottom: 20px;
 			}
 			span#timer
 			{
@@ -43,6 +56,10 @@ Tommy Liang
 			div#log
 			{
 				font:16pt comic sans ms;
+			}
+			hr
+			{
+				width: 700px;
 			}
 		</style>
 		<script src = "Utilities.js"></script>
@@ -265,20 +282,15 @@ Tommy Liang
 		</script>
 	</head>
 	<body onload = "initialize();">
-		
 		<div id = "title">
 		The Codebreaker
 		</div>
-		
-		<hr/>
-		
+		<hr/>	
 		<div id = "cmsg"></div>
-		
-		<hr />
-		
-		<span id = "score">
+		<hr />	
+		<div id = "score">
 		Score Count: <span id = "sre"></span>
-		</span>
+		</div>
 		
 		<div id = "vault">
 		<span id = "timer">
